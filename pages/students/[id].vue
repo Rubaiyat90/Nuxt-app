@@ -2,10 +2,14 @@
   <div class="mt-5 container">
     <div class="card">
       <div class="card-header">
-        <h4>Create Student</h4>
+        <h4>Eit Student</h4>
       </div>
-      <div class="card-body">
-        <form @submit.prevent="saveStudent">
+
+    <div v-if="isSaving">
+        <Loading :title="isSavingTitle" />
+    </div>
+      <div class="card-body" v-else>
+        <form @submit.prevent="updateStudent">
           <div class="mb-3">
             <label>Name</label>
             <input type="text" v-model="student.name" class="form-control"/>
@@ -22,10 +26,7 @@
             <label>Department</label>
             <input type="text" v-model="student.department" class="form-control"/>
           </div>
-          <div v-if="isSaving">
-            <Loading :title="isSavingTitle" />
-          </div>
-          <div class="mb-3" v-else>
+          <div class="mb-3">
             <input type="submit" class="btn btn-primary"/>
           </div>
         </form>
@@ -38,35 +39,42 @@
 import axios from 'axios';
 
   export default {
-    name: "studentCreate",
+    name: "studentEdit",
     data(){
       return{
-        student: {
-          name: '',
-          email: '',
-          phone: '',
-          department: '',
-        },
+        studentId : '',
+        student: {},
         isSaving: false,
         isSavingTitle: 'Loading',
       }
     },
+
+    mounted(){
+        this.studentId = this.$route.params.id;
+
+        this.getStudent(this.studentId);
+    },
+
     methods: {
-      saveStudent(){
+
+        getStudent(studentId){
+            this.isSaving = true;
+            axios.get(`http://127.0.0.1:8000/api/students/${studentId}/edit`).then(res=>{
+                this.isSaving = false;
+                this.student = res.data.student;
+            });
+        },
+        
+      updateStudent(){
         this.isSaving = true,
-        this.isSavingTitle = 'Saving',
+        this.isSavingTitle = 'Updating',
 
-        axios.post(`http://127.0.0.1:8000/api/students`, this.student).then(res => {
+        axios.put(`http://127.0.0.1:8000/api/students/${this.studentId}/edit`, this.student).then(res => {
 
-          alert(res.data.students);
-          
-          this.student.name = '';
-          this.student.email = '';
-          this.student.phone = '';
-          this.student.department = '';
+          alert(res.data.student);
 
           this.isSaving = false;
-          this.isSavingTitle = 'Loading';
+          this.isSavingTitle = 'Loading';  
         });
       }
     }
