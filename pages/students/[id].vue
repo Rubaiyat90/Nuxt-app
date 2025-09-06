@@ -2,7 +2,9 @@
   <div class="mt-5 container">
     <div class="card">
       <div class="card-header">
-        <h4>Eit Student</h4>
+        <h4>Eit Student
+            <NuxtLink class="btn btn-primary float-end" to="/students">Back</NuxtLink>
+        </h4>
       </div>
 
     <div v-if="isSaving">
@@ -13,18 +15,22 @@
           <div class="mb-3">
             <label>Name</label>
             <input type="text" v-model="student.name" class="form-control"/>
+            <span class="text-danger" v-if="this.errorList.name">{{ this.errorList.name[0] }}</span>
           </div>
           <div class="mb-3">
             <label>Email</label>
             <input type="text" v-model="student.email" class="form-control"/>
+            <span class="text-danger" v-if="this.errorList.email">{{ this.errorList.email[0] }}</span>
           </div>
           <div class="mb-3">
             <label>Phone Number</label>
             <input type="text" v-model="student.phone" class="form-control"/>
+            <span class="text-danger" v-if="this.errorList.phone">{{ this.errorList.phone[0] }}</span>
           </div>
           <div class="mb-3">
             <label>Department</label>
             <input type="text" v-model="student.department" class="form-control"/>
+            <span class="text-danger" v-if="this.errorList.department">{{ this.errorList.department[0] }}</span>
           </div>
           <div class="mb-3">
             <input type="submit" class="btn btn-primary"/>
@@ -46,6 +52,7 @@ import axios from 'axios';
         student: {},
         isSaving: false,
         isSavingTitle: 'Loading',
+        errorList: {}
       }
     },
 
@@ -66,15 +73,26 @@ import axios from 'axios';
         },
         
       updateStudent(){
-        this.isSaving = true,
-        this.isSavingTitle = 'Updating',
+        this.isSaving = true;
+        this.isSavingTitle = 'Updating';
+
+        var myThis  = this;
 
         axios.put(`http://127.0.0.1:8000/api/students/${this.studentId}/edit`, this.student).then(res => {
 
           alert(res.data.student);
 
           this.isSaving = false;
-          this.isSavingTitle = 'Loading';  
+          this.isSavingTitle = 'Loading'; 
+          this.errorList  = {}; 
+        })
+        .catch(function(error){
+          if(error.response){
+            if(error.response.status==422){
+              myThis.errorList = error.response.data.errors;
+            }
+          }
+          myThis.isSaving = false;
         });
       }
     }

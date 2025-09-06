@@ -9,18 +9,22 @@
           <div class="mb-3">
             <label>Name</label>
             <input type="text" v-model="student.name" class="form-control"/>
+            <span class="text-danger" v-if="this.errorList.name">{{ this.errorList.name[0] }}</span>
           </div>
           <div class="mb-3">
             <label>Email</label>
             <input type="text" v-model="student.email" class="form-control"/>
+            <span class="text-danger" v-if="this.errorList.email">{{ this.errorList.email[0] }}</span>
           </div>
           <div class="mb-3">
             <label>Phone Number</label>
             <input type="text" v-model="student.phone" class="form-control"/>
+            <span class="text-danger" v-if="this.errorList.phone">{{ this.errorList.phone[0] }}</span>
           </div>
           <div class="mb-3">
             <label>Department</label>
             <input type="text" v-model="student.department" class="form-control"/>
+            <span class="text-danger" v-if="this.errorList.department">{{ this.errorList.department[0] }}</span>
           </div>
           <div v-if="isSaving">
             <Loading :title="isSavingTitle" />
@@ -49,12 +53,15 @@ import axios from 'axios';
         },
         isSaving: false,
         isSavingTitle: 'Loading',
+        errorList: {}
       }
     },
     methods: {
       saveStudent(){
-        this.isSaving = true,
-        this.isSavingTitle = 'Saving',
+        this.isSaving = true;
+        this.isSavingTitle = 'Saving';
+
+        var myThis = this;
 
         axios.post(`http://127.0.0.1:8000/api/students`, this.student).then(res => {
 
@@ -67,6 +74,16 @@ import axios from 'axios';
 
           this.isSaving = false;
           this.isSavingTitle = 'Loading';
+
+          this.errorList = {};
+        })
+        .catch(function(error){
+          if(error.response){
+            if(error.response.status==422){
+              myThis.errorList = error.response.data.errors;
+            }
+          }
+          myThis.isSaving = false;
         });
       }
     }
