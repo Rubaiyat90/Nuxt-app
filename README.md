@@ -1,75 +1,17 @@
-# Nuxt Minimal Starter
+# Student CRUD App
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This is a simple CRUD (Create, Read, Update, Delete) application for managing student records using Nuxt and Laravel api.
 
-## Setup
+## Features
+- Add new students
+- View student list
+- Edit student details
+- Delete students
 
-Make sure to install dependencies:
+## Installation
+Clone the repository and install dependencies:
 
-```bash
-# npm
+git clone https://github.com/Rubaiyat90/Nuxt-app.git
+cd Nuxt
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
